@@ -5,7 +5,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.urls import reverse
 from django.utils.timezone import now
 from rest_framework.exceptions import ValidationError
-
+git commit -m
 class UserManager(BaseUserManager):
     first_name = models.CharField(max_length=100, verbose_name='Имя')
     last_name = models.CharField(max_length=100, verbose_name='Фамилия')
