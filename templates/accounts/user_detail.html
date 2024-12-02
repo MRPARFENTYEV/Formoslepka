@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Секция с фото -->
+        <div class="col-md-4 text-center" style="margin-top: 400px;">
+            {% if user_image %}
+                <img src="{{ user_image.url }}" alt="Фото сотрудника" class="img-thumbnail" style="max-width: 250px; height: auto;">
+            {% else %}
+                <img src="https://via.placeholder.com/250x250.png?text=Фото+нет" alt="Заглушка" class="img-thumbnail" style="max-width: 250px; height: auto;">
+            {% endif %}
+        </div>
+
+        <!-- Секция с разделами -->
+        <div class="col-md-8">
+            <!-- Первый раздел: О сотруднике -->
+            <div class="card mb-4"  style="margin-top: 400px;">
+                <div class="card-header">
+                    <h3>О сотруднике</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Имя:</strong> {{ user_name }}</p>
+                    <p><strong>Фамилия:</strong> {{ user_surname }}</p>
+                    <p><strong>Отчество:</strong> {{ user_patronym|default_if_none:"" }}</p>
+                    <p><strong>Должность:</strong> {{ user_position|default_if_none:"" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Раздел 2: Контакты -->
+        <div class="card mb-4">
+        <div class="card-header">
+            <h3>Контакты</h3>
+        </div>
+
+        <div class="card-body">
+            <p><strong>Email:</strong> {{ user_email }}</p>
+            {% for contact in user_contacts %}
+                <p><strong>Телефон:</strong> {{ contact.phone }}</p>
+                <p><strong>Telegram:</strong> {{ contact.telegram }}</p>
+            {% endfor %}
+        </div>
+        </div>
+
+        <!-- Раздел 3: Адрес -->
+        <div class="card mb-4">
+        <div class="card-header">
+            <h3>Адрес</h3>
+        </div>
+        <div class="card-body">
+            {% for address in user_addresses %}
+                <p><strong>Город:</strong> {{ address.city }}</p>
+                <p><strong>Улица:</strong> {{ address.street }}</p>
+                <p><strong>Дом:</strong> {{ address.house }}</p>
+                <p><strong>Квартира:</strong> {{ address.apartment }}</p>
+            {% endfor %}
+        </div>
+
+            <!-- Раздел 4: Образование -->
+             <div class="card mb-4">
+        <div class="card-header">
+            <h3>Образование</h3>
+        </div>
+            <div class="card-body">
+                {% for diploma in user_diplomas %}
+                    <p><strong>Организация:</strong> {{ diploma.organisation|default_if_none:"" }}</p>
+                    <p><strong>Уровень образования:</strong> {{ diploma.education_level|default_if_none:"" }}</p>
+                    <p><strong>Номер диплома:</strong> {{ diploma.serial_number|default_if_none:"" }}</p>
+                    <p><strong>Специальность:</strong> {{ diploma.speciality|default_if_none:"" }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    <!-- Раздел 5: Паспорт -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Паспорт</h3>
+        </div>
+        <div class="card-body">
+            {% for passport in user_passports %}
+                <p><strong>Серия:</strong> {{ passport.passport_serial_number|default_if_none:""  }}</p>
+                <p><strong>Номер:</strong> {{ passport.passport_num|default_if_none:""  }}</p>
+                <p><strong>Кем выдан:</strong> {{ passport.released|default_if_none:""  }}</p>
+                <p><strong>Дата выдачи:</strong> {{ passport.released_data|default_if_none:""  }}</p>
+                <p><strong>Номер подразделения:</strong> {{ passport.department_code|default_if_none:""  }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+     <!-- Раздел 6: Военная служба -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Военный билет</h3>
+        </div>
+        <div class="card-body">
+            {% for service in user_military_services %}
+                <p><strong>ГД:</strong> {{ service.gd }}</p>
+                <p><strong>Личный номер:</strong> {{ service.personal_number }}</p>
+                <p><strong>Кем выдан:</strong> {{ service.released }}</p>
+                <p><strong>Дата выдачи:</strong> {{ service.release_data_day }} {{service.release_data_month}} {{service.release_data_year}}</p>
+                <p><strong>Звание:</strong> {{ service.rank }}</p>
+                <p><strong>Присвоено приказом:</strong> {{ service.order }}</p>
+                <p><strong>ВУС №:</strong> {{ service.military_specialty }}</p>
+                <p><strong>Наименование профиля:</strong> {{ service.profile_name }}</p>
+                <p><strong>Разряд запаса:</strong> {{ service.reserve_num }}</p>
+                <p><strong>Проходил службу с... по...:</strong> {{ service.mil_service }}</p>
+                <p><strong>Прикреплен или снят с учета:</strong> {{ service.pinned }}</p>
+
+
+            {% endfor %}
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
