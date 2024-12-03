@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+    <div  class="col-md-6">
+
+        <form method="POST">
+
+            <h3>Настройки профиля</h3>
+            <hr>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+
+            <a href="/accounts/conta<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>Title
+
+</body>
+</html>ct/">Изменить контакт и адрес</a>
+
+
+            <div class="form-group">
+                <button class="btn btn-primary mt-3 w-100" type="submit">Обновить информацию</button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+{% endblock %}

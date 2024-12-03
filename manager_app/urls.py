@@ -6,6 +6,6 @@ from manager_app import views
 app_name = "manager_app"
 
 urlpatterns = [
-    path('home', views.home_page, name='home_page')]
+    path('home_page/', views.home_page, name='home_page')]
 
 

@@ -1,7 +1,9 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render
-from accounts.forms import UserRegistrationForm
+from django.shortcuts import render, redirect
+from accounts.forms import UserRegistrationForm, EditUserForm, UserLoginForm
 from accounts.models import User
 
 
@@ -72,4 +74,38 @@ def user_detail(request, user_id):
     return render(request,'accounts/user_detail.html', context)
 
 
+def edit_user_data(request):
+    form = EditUserForm(request.POST, instance=request.user)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Ваш профиль был изменен', 'success')
+        return redirect('accounts:edit_user_profile')
+    else:
+        form = EditUserForm(instance=request.user)
+    context = {'title':'Edit Profile', 'form':form}
+    return render(request, 'accounts/edit_user_profile.html', context)
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            print(data)
+            user = authenticate(
+                request, email=data['email'], password=data['password']
+            )
+            print(user)
+            if user is not None:
+
+                login(request, user)
+                return redirect('manager_app:home_page')
+            else:
+                messages.error(
+                    request, 'Имя или пароль не верны', 'danger'
+                )
+                return redirect('accounts:user_login')
+    else:
+        form = UserLoginForm()
+    context = {'title':'Login', 'form': form}
+    return render(request, 'accounts/login.html', context)
 
