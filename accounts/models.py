@@ -41,11 +41,11 @@ class User(AbstractBaseUser):
     patronym = models.CharField(max_length=100, verbose_name='Отчество', blank=True, null=True)  # null=True убран
     date_joined = models.DateTimeField(default=now)
     image = models.ImageField(upload_to='accounts')
-    birthday_date = models.CharField(max_length=10, verbose_name='Дата рождения', blank=True, null=True)
+    birthday_date = models.DateField(max_length=10, verbose_name='Дата рождения', blank=True, null=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     email = models.EmailField(max_length=100, unique=True, verbose_name='Электронная почта', blank=False, null=False)
-    position = models.EmailField(max_length=100, unique=True, verbose_name='Должность', blank=True, null=True)
+    position = models.CharField(max_length=100, unique=True, verbose_name='Должность', blank=True, null=True)
 
     objects = UserManager()
 

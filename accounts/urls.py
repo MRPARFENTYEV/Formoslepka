@@ -9,10 +9,14 @@ from django.views.generic import TemplateView
 app_name = 'accounts'
 
 urlpatterns = [
-    path('register/', views.user_register, name='user_register'),
+    path('register/', views.user_register, name='register'),
     path('all_users/', views.all_users, name='all_users'),
     path('user_detail/<int:user_id>/', views.user_detail, name='user_detail'),
-    path('edit_user_data/', views.edit_user_data, name='user_detail'),
+    path('edit_user_data/', views.edit_user_data, name='edit_user_data'),
     path('login/', views.user_login, name='user_login'),
+    path('admin_edit_user_data/<int:user_id>/', views.admin_edit_user_data, name='admin_edit_user_data'),
+    path('admin_delete_user/<int:user_id>/', views.admin_delete_user, name='admin_delete_user'),
+    path('admin_delete_users/', views.admin_delete_users, name='admin_delete_users'),
+
 
 ]

@@ -41,6 +41,12 @@ class EditUserForm(forms.ModelForm):
                    'email': forms.TextInput(attrs={'placeholder': 'Пример: User@mail.ru'})}
 
 
+
+
+
+
+
+
 class UserLoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
