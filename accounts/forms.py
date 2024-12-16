@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit
-from .models import User
+from .models import User, Address
 
 
 class UserRegistrationForm(forms.Form):
@@ -28,7 +28,7 @@ class UserRegistrationForm(forms.Form):
     )
 
 
-class EditUserForm(forms.ModelForm):
+class EditUserForm(forms.Form):
     class Meta:
         model = User
         fields = ['position', 'first_name', 'last_name', 'patronym', 'email', 'birthday_date', ]
@@ -39,6 +39,19 @@ class EditUserForm(forms.ModelForm):
                    'birthday_date': forms.TextInput(attrs={'placeholder': 'Дата рождения'}),
                    # 'image': forms.ImageField(attrs={'placeholder': 'Аватарка'}),
                    'email': forms.TextInput(attrs={'placeholder': 'Пример: User@mail.ru'})}
+
+class Admin_user_address_data_form(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['city', 'street', 'house', 'structure', 'building', 'apartment']
+        widgets = {'city': forms.TextInput(attrs={'placeholder': 'Город'}),
+                   'street': forms.TextInput(attrs={'placeholder': 'Улица'}),
+                   'house': forms.TextInput(attrs={'placeholder': 'Дом'}),
+                   'structure': forms.TextInput(attrs={'placeholder': 'Строение'}),
+                   'building': forms.TextInput(attrs={'placeholder': 'Здание'}),
+                   'apartment': forms.TextInput(attrs={'placeholder': 'Квартира'})}
+
+
 
 
 

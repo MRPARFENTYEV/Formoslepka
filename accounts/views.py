@@ -6,8 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.http import HttpRequest, HttpResponse
-from accounts.forms import UserRegistrationForm, EditUserForm, UserLoginForm
-from accounts.models import User
+from accounts.forms import UserRegistrationForm, EditUserForm, UserLoginForm, Admin_user_address_data_form
+from accounts.models import User, Address
 
 
 def paginat(request: HttpRequest, list_objects: list) -> Page:  # https://docs.djangoproject.com/en/5.0/topics/pagination/
@@ -138,13 +138,6 @@ def admin_edit_user_data(request: HttpRequest, user_id: int) -> HttpRequest:
 
 
 
-def admin_delete_user(request: HttpRequest, user_id: int) -> HttpResponse: # тут порядок, функция работает
-    user = User.objects.filter(id = user_id)
-    print(user)
-    user.delete()
-    # return HttpResponse(f'200')
-    return all_users(request)
-
 
 def admin_delete_users(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
@@ -155,10 +148,27 @@ def admin_delete_users(request: HttpRequest) -> HttpResponse:
 
 
 
-
-
 def admin_user_address_data(request, user_id):
-    return all_users(request)
+    user = get_object_or_404(User, id=user_id)
+    address = user.adresses.all()
+    if address.exists():
+        address = address.first()
+        form = Admin_user_address_data_form(request.POST or None, instance=address)
+    else:
+        # Создаём пустую форму для нового адреса
+        form = Admin_user_address_data_form(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            # Сохраняем новый или редактируемый адрес
+            address = form.save(commit=False)
+            address.user = user  # Привязываем адрес к пользователю
+            address.save()
+            messages.success(request, "Адрес успешно сохранён")
+            return render(request, 'accounts/admin_user_address_data.html', {'form': form, 'user': user})
+
+    return render(request, 'accounts/admin_user_address_data.html', {'form': form, 'user': user})
+
 
 
 def admin_user_millitary_service_data(request, user_id):

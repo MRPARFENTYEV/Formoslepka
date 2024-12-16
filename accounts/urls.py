@@ -15,8 +15,6 @@ urlpatterns = [
     path('edit_user_data/', views.edit_user_data, name='edit_user_data'),
     path('login/', views.user_login, name='user_login'),
     path('admin_edit_user_data/<int:user_id>/', views.admin_edit_user_data, name='admin_edit_user_data'),
-    path('admin_delete_user/<int:user_id>/', views.admin_delete_user, name='admin_delete_user'),
     path('admin_delete_users/', views.admin_delete_users, name='admin_delete_users'),
-
-
+    path('admin_user_address_data/<int:user_id>/', views.admin_user_address_data, name= 'admin_user_address_data')
 ]

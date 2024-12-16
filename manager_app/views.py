@@ -12,6 +12,28 @@ def home_page(request):
 	# else:
 	return render(request, 'manager_app/home_page.html', context)
 
+def admin_user_address_data(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    address = user.adresses.all()
+    if address.exists():
+        address = address.first()
+        form = Admin_user_address_data_form(request.POST or None, instance=address)
+    else:
+        # Создаём пустую форму для нового адреса
+        form = Admin_user_address_data_form(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            # Сохраняем новый или редактируемый адрес
+            address = form.save(commit=False)
+            address.user = user  # Привязываем адрес к пользователю
+            address.save()
+            messages.success(request, "Адрес успешно сохранён")
+            return render(request, 'accounts/admin_user_address_data.html', {'form': form, 'user': user})
+
+    return render(request, 'accounts/admin_user_address_data.html', {'form': form, 'user': user})
+
+
 
     #'accounts/register.html'
 	# if not hasattr(request.user, 'is_manager'):
