@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91504959-5882-4d56-b100-91ee7d7df209" name="Changes" comment="made readme">
+    <list default="true" id="91504959-5882-4d56-b100-91ee7d7df209" name="Changes" comment="remade readme">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
@@ -153,7 +153,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738012250366</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="remade readme">
+      <option name="closed" value="true" />
+      <created>1738013094740</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1738013094740</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -163,6 +171,7 @@
     <MESSAGE value="user_delete_html_is_ready" />
     <MESSAGE value="before refactoring first" />
     <MESSAGE value="made readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="made readme" />
+    <MESSAGE value="remade readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="remade readme" />
   </component>
 </project>
