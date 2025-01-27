@@ -31,6 +31,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, first_name, last_name, password, patronym=None):
         user = self.create_user(email, first_name, last_name, password, patronym)
         user.is_admin = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
@@ -44,6 +45,7 @@ class User(AbstractBaseUser):
     birthday_date = models.DateField(max_length=10, verbose_name='Дата рождения', blank=True, null=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     email = models.EmailField(max_length=100, unique=True, verbose_name='Электронная почта', blank=False, null=False)
     position = models.CharField(max_length=100, unique=True, verbose_name='Должность', blank=True, null=True)
 
@@ -54,6 +56,19 @@ class User(AbstractBaseUser):
 
     def get_absolute_url(self):
         return reverse('accounts:user_detail', kwargs={'user_id': self.id})
+    # Добавьте эти методы:
+    def has_perm(self, perm, obj=None):
+        """
+        Проверка конкретного разрешения.
+        Обычно возвращает True для суперпользователей.
+        """
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        """
+        Проверяет доступ пользователя к приложению (модулю).
+        """
+        return self.is_admin
 
     def __str__(self):
         return self.email
@@ -89,15 +104,15 @@ class Address(models.Model):
         return f'{self.city} {self.street} {self.house} {self.apartment} {self.phone} {self.user}'
 
 
-class Millitary_service(models.Model):
-    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='millitary_service',
+class Military_service(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='military_service',
                              on_delete=models.CASCADE)
     gd = models.CharField(max_length=7, verbose_name='ГД', blank=True, null=True)
     personal_number = models.CharField(max_length=10, verbose_name='Личный номер', blank=True, null=True)
     released = models.CharField(max_length=100, verbose_name='Выдан', blank=True, null=True)
     release_data_day = models.CharField(max_length=2, verbose_name='День выдачи', blank=True, null=True)
     release_data_month = models.CharField(max_length=2, verbose_name='Месяц выдачи', blank=True, null=True)
-    release_data_year = models.CharField(max_length=2, verbose_name='Год выдачи', blank=True, null=True)
+    release_data_year = models.CharField(max_length=4, verbose_name='Год выдачи', blank=True, null=True)
     rank = models.CharField(max_length=50, verbose_name='Воинское звание', blank=True, null=True)
     order = models.CharField(max_length=100, verbose_name='Присвоено приказом', blank=True, null=True)
     military_specialty = models.CharField(max_length=10, verbose_name='ВУС №', blank=True, null=True)
@@ -107,6 +122,7 @@ class Millitary_service(models.Model):
     pinned = models.CharField(max_length=10, verbose_name='Прикреплен или снят с учета', blank=True, null=True)
 
     class Meta:
+
         verbose_name = 'Военный билет'
         verbose_name_plural = 'Военные билеты'
 

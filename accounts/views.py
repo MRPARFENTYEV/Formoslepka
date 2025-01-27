@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, Page
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.http import HttpRequest, HttpResponse
-from accounts.forms import UserRegistrationForm, EditUserForm, UserLoginForm, Admin_user_address_data_form
+from accounts.forms import UserRegistrationForm, UserLoginForm, EditUserForm
 from accounts.models import User, Address
 
 
@@ -46,20 +48,20 @@ def user_register(request: HttpRequest) -> HttpResponse:
     context = {'title': 'Signup', 'form': form}
     return render(request, 'accounts/register.html', context)
 
-
+@login_required
 def all_users(request: HttpRequest) -> HttpResponse:
     users = User.objects.all()
     context = {'users': paginat(request, users)}
     return render(request, 'accounts/all_users.html', context)
 
-
+@login_required
 def user_detail(request: HttpRequest, user_id: int) -> HttpResponse:
     required_user = User.objects.get(id=user_id)
     user_contacts = required_user.contacts.all()
     user_passports = required_user.passports.all()
     user_addresses = required_user.adresses.all()
     user_diplomas = required_user.diplomas.all()
-    user_military_services = required_user.millitary_service.all()
+    user_military_services = required_user.military_service.all()
 
     context = {'user_name': required_user.first_name,
                'user_surname': required_user.last_name,
@@ -76,8 +78,11 @@ def user_detail(request: HttpRequest, user_id: int) -> HttpResponse:
                'user_military_services': user_military_services}
     return render(request,'accounts/user_detail.html', context)
 
-
+@login_required
 def edit_user_data(request: HttpRequest) -> HttpResponse:
+    if not request.user.is_authenticated:
+        return redirect('accounts:user_login')
+    print(request.user)
     if request.method == 'POST':
         form = EditUserForm(request.POST, instance=request.user)  # Создаём форму с введёнными данными
         if form.is_valid():
@@ -89,6 +94,7 @@ def edit_user_data(request: HttpRequest) -> HttpResponse:
 
     context = {'title': 'Edit Profile', 'form': form}
     return render(request, 'accounts/edit_user_profile.html', context)
+
 
 def user_login(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
@@ -113,32 +119,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
         form = UserLoginForm()
     context = {'title':'Login', 'form': form}
     return render(request, 'accounts/login.html', context)
-
-
-def admin_edit_user_data(request: HttpRequest, user_id: int) -> HttpRequest:
-
-    # Получаем объект пользователя по его ID
-    user = get_object_or_404(User, id=user_id)
-
-    if request.method == "POST":
-
-        # Если POST-запрос, проверяем данные формы
-        form = EditUserForm(request.POST, instance=user)
-        if form.is_valid():
-            # Сохраняем изменения
-            form.save()
-            # Перенаправляем, например, на список пользователей или на страницу подтверждения
-            return render(request, 'accounts/edit_user_profile.html', {'form': form, 'user': user})
-    else:
-
-        # Для GET-запроса отображаем форму с текущими данными пользователя
-        form = EditUserForm(instance=user)
-
-    return render(request, 'accounts/edit_user_profile.html', {'form': form, 'user': user})
-
-
-
-
+@login_required
 def admin_delete_users(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         users_to_delete = request.POST.getlist('users_to_delete')  # Получаем список ID
@@ -148,37 +129,7 @@ def admin_delete_users(request: HttpRequest) -> HttpResponse:
 
 
 
-def admin_user_address_data(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    address = user.adresses.all()
-    if address.exists():
-        address = address.first()
-        form = Admin_user_address_data_form(request.POST or None, instance=address)
-    else:
-        # Создаём пустую форму для нового адреса
-        form = Admin_user_address_data_form(request.POST or None)
-
-    if request.method == "POST":
-        if form.is_valid():
-            # Сохраняем новый или редактируемый адрес
-            address = form.save(commit=False)
-            address.user = user  # Привязываем адрес к пользователю
-            address.save()
-            messages.success(request, "Адрес успешно сохранён")
-            return render(request, 'accounts/admin_user_address_data.html', {'form': form, 'user': user})
-
-    return render(request, 'accounts/admin_user_address_data.html', {'form': form, 'user': user})
 
 
 
-def admin_user_millitary_service_data(request, user_id):
-    pass
 
-def admin_user_contact(request, user_id):
-    pass
-
-def admin_user_diploma(request, user_id):
-    pass
-
-def admin_user_passport_data(request, user_id):
-    pass

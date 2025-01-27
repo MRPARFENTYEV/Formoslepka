@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+    <div  class="col-md-5">
+
+        <form method="POST">
+
+            <h5 class="custom-title">Военная служба</h5>
+            <hr>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+
+
+
+            <div class="form-group">
+                <button class="btn btn-primary mt-3 w-100" type="submit">Обновить информацию</button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+{% endblock %}
